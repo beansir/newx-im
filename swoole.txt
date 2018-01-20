@@ -1,0 +1,235 @@
+object(Swoole\WebSocket\Server)#9 (33) {
+  ["onConnect"]=>
+  NULL
+  ["onReceive"]=>
+  NULL
+  ["onClose"]=>
+  array(2) {
+    [0]=>
+    object(console\swoole\WebSocket)#8 (3) {
+      ["_server":"newx\library\swoole\WebSocket":private]=>
+      *RECURSION*
+      ["_host":"newx\library\swoole\WebSocket":private]=>
+      string(7) "0.0.0.0"
+      ["_port":"newx\library\swoole\WebSocket":private]=>
+      int(9502)
+    }
+    [1]=>
+    string(5) "close"
+  }
+  ["onPacket"]=>
+  NULL
+  ["onBufferFull"]=>
+  NULL
+  ["onBufferEmpty"]=>
+  NULL
+  ["onStart"]=>
+  NULL
+  ["onShutdown"]=>
+  NULL
+  ["onWorkerStart"]=>
+  NULL
+  ["onWorkerStop"]=>
+  NULL
+  ["onWorkerExit"]=>
+  NULL
+  ["onWorkerError"]=>
+  NULL
+  ["onTask"]=>
+  NULL
+  ["onFinish"]=>
+  NULL
+  ["onManagerStart"]=>
+  NULL
+  ["onManagerStop"]=>
+  NULL
+  ["onPipeMessage"]=>
+  NULL
+  ["connections"]=>
+  object(Swoole\Connection\Iterator)#10 (0) {
+  }
+  ["host"]=>
+  string(7) "0.0.0.0"
+  ["port"]=>
+  int(9502)
+  ["type"]=>
+  int(1)
+  ["mode"]=>
+  int(3)
+  ["ports"]=>
+  array(1) {
+    [0]=>
+    object(Swoole\Server\Port)#11 (15) {
+      ["onConnect"]=>
+      NULL
+      ["onReceive"]=>
+      NULL
+      ["onClose"]=>
+      array(2) {
+        [0]=>
+        object(console\swoole\WebSocket)#8 (3) {
+          ["_server":"newx\library\swoole\WebSocket":private]=>
+          *RECURSION*
+          ["_host":"newx\library\swoole\WebSocket":private]=>
+          string(7) "0.0.0.0"
+          ["_port":"newx\library\swoole\WebSocket":private]=>
+          int(9502)
+        }
+        [1]=>
+        string(5) "close"
+      }
+      ["onPacket"]=>
+      NULL
+      ["onBufferFull"]=>
+      NULL
+      ["onBufferEmpty"]=>
+      NULL
+      ["onRequest"]=>
+      NULL
+      ["onHandShake"]=>
+      NULL
+      ["onMessage"]=>
+      NULL
+      ["onOpen"]=>
+      NULL
+      ["host"]=>
+      string(7) "0.0.0.0"
+      ["port"]=>
+      int(9502)
+      ["type"]=>
+      int(1)
+      ["sock"]=>
+      int(3)
+      ["setting"]=>
+      NULL
+    }
+  }
+  ["master_pid"]=>
+  int(26892)
+  ["manager_pid"]=>
+  int(26893)
+  ["worker_id"]=>
+  int(0)
+  ["taskworker"]=>
+  bool(false)
+  ["worker_pid"]=>
+  int(26895)
+  ["onRequest"]=>
+  NULL
+  ["onHandshake"]=>
+  NULL
+  ["setting"]=>
+  array(5) {
+    ["open_http_protocol"]=>
+    bool(true)
+    ["open_mqtt_protocol"]=>
+    bool(false)
+    ["open_eof_check"]=>
+    bool(false)
+    ["open_length_check"]=>
+    bool(false)
+    ["open_websocket_protocol"]=>
+    bool(true)
+  }
+  ["onOpen"]=>
+  array(2) {
+    [0]=>
+    object(console\swoole\WebSocket)#8 (3) {
+      ["_server":"newx\library\swoole\WebSocket":private]=>
+      *RECURSION*
+      ["_host":"newx\library\swoole\WebSocket":private]=>
+      string(7) "0.0.0.0"
+      ["_port":"newx\library\swoole\WebSocket":private]=>
+      int(9502)
+    }
+    [1]=>
+    string(4) "open"
+  }
+  ["onMessage"]=>
+  array(2) {
+    [0]=>
+    object(console\swoole\WebSocket)#8 (3) {
+      ["_server":"newx\library\swoole\WebSocket":private]=>
+      *RECURSION*
+      ["_host":"newx\library\swoole\WebSocket":private]=>
+      string(7) "0.0.0.0"
+      ["_port":"newx\library\swoole\WebSocket":private]=>
+      int(9502)
+    }
+    [1]=>
+    string(7) "message"
+  }
+}
+object(Swoole\Http\Request)#13 (9) {
+  ["fd"]=>
+  int(2)
+  ["header"]=>
+  array(12) {
+    ["host"]=>
+    string(17) "47.96.169.56:9502"
+    ["connection"]=>
+    string(7) "Upgrade"
+    ["pragma"]=>
+    string(8) "no-cache"
+    ["cache-control"]=>
+    string(8) "no-cache"
+    ["upgrade"]=>
+    string(9) "websocket"
+    ["origin"]=>
+    string(20) "http://chat.newx.ink"
+    ["sec-websocket-version"]=>
+    string(2) "13"
+    ["user-agent"]=>
+    string(108) "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
+    ["accept-encoding"]=>
+    string(13) "gzip, deflate"
+    ["accept-language"]=>
+    string(14) "zh-CN,zh;q=0.9"
+    ["sec-websocket-key"]=>
+    string(24) "XodnmqIJJcNyfXSZ4hevbA=="
+    ["sec-websocket-extensions"]=>
+    string(42) "permessage-deflate; client_max_window_bits"
+  }
+  ["server"]=>
+  array(12) {
+    ["query_string"]=>
+    string(8) "userId=1"
+    ["request_method"]=>
+    string(3) "GET"
+    ["request_uri"]=>
+    string(1) "/"
+    ["path_info"]=>
+    string(1) "/"
+    ["request_time"]=>
+    int(1515600757)
+    ["request_time_float"]=>
+    float(1515600757.162)
+    ["server_port"]=>
+    int(9502)
+    ["remote_port"]=>
+    int(36038)
+    ["remote_addr"]=>
+    string(14) "183.253.42.145"
+    ["master_time"]=>
+    int(1515600757)
+    ["server_protocol"]=>
+    string(8) "HTTP/1.1"
+    ["server_software"]=>
+    string(18) "swoole-http-server"
+  }
+  ["request"]=>
+  NULL
+  ["cookie"]=>
+  NULL
+  ["get"]=>
+  array(1) {
+    ["userId"]=>
+    string(1) "1"
+  }
+  ["files"]=>
+  NULL
+  ["post"]=>
+  NULL
+  ["tmpfiles"]=>
+  NULL
+}

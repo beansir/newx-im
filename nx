@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+defined('IS_LINUX') or define('IS_LINUX', PATH_SEPARATOR == ':');
+
+// 框架主体
+require __DIR__ . '/newx/Newx.php';
+
+// 配置目录
+Newx::setDir('module', __DIR__ . '/'); // 模块目录
+Newx::setDir('app', __DIR__ . '/console/'); // 应用目录
+
+// 配置文件
+$config = require __DIR__ . '/console/config/config.php';
+
+// 开始运行
+Newx::console($config, $argv);
