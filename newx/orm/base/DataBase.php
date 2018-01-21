@@ -9,26 +9,17 @@ namespace newx\orm\base;
 class DataBase extends BaseObject
 {
     /**
-     * CONSTRUCT
+     * 加载数据库连接
      * @param array $configs 数据库配置
      */
-    public function __construct($configs = array())
+    public static function load($configs = array())
     {
-        $this->loadContainer();
-
+        // 创建数据库连接实例
         if (!empty($configs)) {
-            foreach ($configs as $property => $config) {
-                $this->{$property} = new Connection($config);
+            foreach ($configs as $key => $config) {
+                $db = new Connection($config);
+                Pool::setDb($key, $db);
             }
         }
-    }
-
-    /**
-     * 加载数据库容器
-     */
-    private function loadContainer()
-    {
-        DataBaseContainer::set('mysqli', new Mysqli());
-        DataBaseContainer::set('pdo', new Pdo());
     }
 }

@@ -12,19 +12,13 @@ class Connection extends BaseObject
      * 数据库
      * @var MysqlInterface
      */
-    private $db;
+    private $_db;
 
     /**
      * 执行语句
      * @var string
      */
-    protected $sql;
-
-    /**
-     * 执行类型
-     * @var string
-     */
-    protected $type;
+    private $_sql;
 
     /**
      * Connection constructor.
@@ -33,11 +27,28 @@ class Connection extends BaseObject
      */
     public function __construct($config)
     {
-        $this->db = DataBaseContainer::get($config['type'], $config);
-
-        if (empty($this->db)) {
-            throw new \Exception('database config error: type not exists');
+        // 数据库连接类型，默认mysqli
+        if (isset($config['type']) && !empty($config['type'])) {
+            $type = $config['type'];
+        } else {
+            $type = DB_LINK_MYSQLI;
         }
+
+        // 创建数据库配置实例
+        switch ($type) {
+            case DB_LINK_MYSQLI:
+                $this->_db = new Mysqli();
+                break;
+            case DB_LINK_PDO:
+                $this->_db = new Pdo();
+                break;
+            default:
+                throw new \Exception('database config error: type not found');
+                break;
+        }
+
+        // 数据配置
+        $this->_db->configure($config);
     }
 
     /**
@@ -48,7 +59,7 @@ class Connection extends BaseObject
     public function setSql($sql = null)
     {
         if (!empty($sql)) {
-            $this->sql = $sql;
+            $this->_sql = $sql;
         }
         return $this;
     }
@@ -58,9 +69,8 @@ class Connection extends BaseObject
      */
     public function query()
     {
-        $this->type = 'query';
-        $this->validateSQL();
-        return $this->db->setSQL($this->sql)->query();
+        $this->validateSQL('query');
+        return $this->_db->setSQL($this->_sql)->query();
     }
 
     /**
@@ -68,23 +78,23 @@ class Connection extends BaseObject
      */
     public function execute()
     {
-        $this->type = 'execute';
-        $this->validateSQL();
-        return $this->db->setSQL($this->sql)->execute();
+        $this->validateSQL('execute');
+        return $this->_db->setSQL($this->_sql)->execute();
     }
 
     /**
      * 验证sql语句的合理性
+     * @param string $type SQL类型
      * @throws \Exception
      */
-    private function validateSQL()
+    private function validateSQL($type)
     {
-        if ($this->type == 'query') {
-            if (stristr($this->sql, 'update') || stristr($this->sql, 'delete')) {
+        if ($type == 'query') {
+            if (stristr($this->_sql, 'update') || stristr($this->_sql, 'delete')) {
                 throw new \Exception('unavailable query()');
             }
-        } elseif ($this->type == 'execute') {
-            if (stristr($this->sql, 'select')) {
+        } elseif ($type == 'execute') {
+            if (stristr($this->_sql, 'select')) {
                 throw new \Exception('unavailable execute()');
             }
         }

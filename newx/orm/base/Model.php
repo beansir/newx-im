@@ -53,10 +53,16 @@ class Model extends BaseObject
     private $_primaryKeys = [];
 
     /**
-     * 类实例
-     * @var array
+     * 执行类型 - 新增
+     * @var string
      */
-    private static $_classObjects = [];
+    const EXEC_INSERT = 'insert';
+
+    /**
+     * 执行类型 - 更新
+     * @var string
+     */
+    const EXEC_UPDATE = 'update';
 
     /**
      * BaseModel constructor.
@@ -65,10 +71,10 @@ class Model extends BaseObject
     public function __construct($query = null)
     {
         if (empty($query)) {
-            $this->_execute = 'insert';
+            $this->_execute = self::EXEC_INSERT;
         } else {
             $this->_query = $query;
-            $this->_execute = 'update';
+            $this->_execute = self::EXEC_UPDATE;
         }
     }
 
@@ -78,7 +84,7 @@ class Model extends BaseObject
      */
     public static function model()
     {
-        return self::createObject(self::className());
+        return self::createModel(self::className());
     }
 
     /**
@@ -116,13 +122,13 @@ class Model extends BaseObject
     }
 
     /**
-     * 创建当前model实例
+     * 创建模型实例
      * @return Model|mixed
      */
-    private static function createObject($className)
+    private static function createModel($className)
     {
-        // 获取类实例
-        $object = self::getClassObject($className);
+        // 获取类模型实例
+        $object = Pool::getModel($className);
 
         if (empty($object)) {
             // 创建类实例
@@ -130,35 +136,11 @@ class Model extends BaseObject
             $object->_query->className = $className;
             $object->_query->tableName = $object->table;
 
-            // 存储类实例
-            self::setClassObject($className, $object);
+            // 设置类模型实例
+            Pool::setModel($className, $object);
         }
 
         return $object;
-    }
-
-    /**
-     * 获取类实例
-     * @param string $className
-     * @return Model|mixed
-     */
-    private static function getClassObject($className)
-    {
-        if (array_key_exists($className, self::$_classObjects)) {
-            return self::$_classObjects[$className];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 配置类实例
-     * @param string $className
-     * @param object $object
-     */
-    private static function setClassObject($className, $object)
-    {
-        self::$_classObjects[$className] = $object;
     }
 
     /**
@@ -170,7 +152,7 @@ class Model extends BaseObject
      */
     public function hasOne($className, $relationField, $selfField)
     {
-        return $this->createRelationObject($className, $relationField, $selfField)->one();
+        return $this->createRelationModel($className, $relationField, $selfField)->one();
     }
 
     /**
@@ -182,20 +164,20 @@ class Model extends BaseObject
      */
     public function hasMany($className, $relationField, $selfField)
     {
-        return $this->createRelationObject($className, $relationField, $selfField)->all();
+        return $this->createRelationModel($className, $relationField, $selfField)->all();
     }
 
     /**
-     * 创建关联的实例
+     * 创建关联模型实例
      * @param string $className 关联的类名
      * @param string $relationField 关联表的字段名
      * @param string $selfField 本表的字段名
      * @return $this
      */
-    private function createRelationObject($className, $relationField, $selfField)
+    private function createRelationModel($className, $relationField, $selfField)
     {
         // 创建类实例
-        $object = self::createObject($className);
+        $object = self::createModel($className);
 
         $where = [
             $relationField => $this->{$selfField}
@@ -429,32 +411,36 @@ class Model extends BaseObject
      */
     private function getExecSql()
     {
-        $execute = $this->_execute;
-        $tableName = $this->table;
-
         // 验证操作的字段是否存在
         $this->validateAttribute();
 
         // 获取操作的字段
         $attributes = $this->_attributes;
+        $tableName = $this->table;
 
-        if ($execute == 'insert') {
-            $key = implode(',', array_keys($attributes));
-            $value = implode(',', array_values($attributes));
-            $sql = "INSERT INTO `" . $tableName . "` (" . $key . ") VALUES (" . $value . ")";
-        } else {
-            $set = '';
-            foreach ($attributes as $key => $value) {
-                if (in_array($key, $this->getPrimaryKey())) {
-                    continue;
+        switch ($this->_execute) {
+            case self::EXEC_INSERT: // 新增
+                $key = implode(',', array_keys($attributes));
+                $value = implode("','", array_values($attributes));
+                $sql = "INSERT INTO `{$tableName}` ({$key}) VALUES ('{$value}')";
+                break;
+            case self::EXEC_UPDATE: // 更新
+                $primaryKey = $this->getPrimaryKey(); // 主键
+                $sets = [];
+                foreach ($attributes as $key => $value) {
+                    // 非主键的字段可更新值
+                    if (!in_array($key, $primaryKey)) {
+                        $sets[] = "{$key}='{$value}'";
+                    }
                 }
-                if (!empty($set)) {
-                    $set .= ",";
-                }
-                $set .= $key . "='" . $value . "'";
-            }
-            $sql = "UPDATE `" . $tableName . "` SET " . $set . " WHERE " . $this->_query->where;
+                $set = implode(',', $sets);
+                $sql = "UPDATE `{$tableName}` SET {$set} WHERE {$this->_query->where}";
+                break;
+            default:
+                $sql = null;
+                break;
         }
+
         return $sql;
     }
 
@@ -497,19 +483,12 @@ class Model extends BaseObject
     }
 
     /**
-     * 获取数据库连接配置
+     * 获取数据库连接实例
      * @return Connection|mixed
      */
     private function getDb()
     {
-        $db = NewxOrm::$db;
-        $database = $this->db;
-
-        if (!property_exists($db, $database)) {
-            throw new \Exception("database config not exists: '{$database}'");
-        }
-
-        return $db->{$database};
+        return Pool::getDb($this->db);
     }
 
     /**
