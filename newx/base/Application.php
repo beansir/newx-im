@@ -7,7 +7,6 @@
 namespace newx\base;
 
 use Newx;
-use newx\data\DataBase;
 use newx\exception\AppException;
 use newx\exception\BaseException;
 use newx\helpers\ArrayHelper;
@@ -51,12 +50,6 @@ class Application extends BaseObject
      * @var Component
      */
     public $component;
-
-    /**
-     * 数据库
-     * @var DataBase
-     */
-    public $database;
 
     /**
      * Application constructor.

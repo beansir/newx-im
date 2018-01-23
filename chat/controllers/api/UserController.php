@@ -22,6 +22,7 @@ class UserController extends Controller
      */
     public function actionLogin()
     {
+        $data = [];
         try {
             $name = $this->getRequest()->post('name');
             if (!$name) {
@@ -66,7 +67,10 @@ class UserController extends Controller
                 throw new \Exception('登录失败');
             }
 
-            $this->getResponse()->success('登录成功');
+            $data['token'] = $user->session_id;
+            $data['nickname'] = $user->nickname;
+
+            $this->getResponse()->success('登录成功', $data);
         } catch (\Exception $e) {
             $this->getResponse()->error($e->getMessage());
         }

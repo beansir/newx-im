@@ -6,7 +6,6 @@
 namespace newx\base;
 
 use Newx;
-use newx\data\DataBase;
 use newx\data\Migration;
 use newx\exception\AppException;
 use newx\exception\BaseException;
@@ -22,12 +21,6 @@ class Console extends BaseObject
      * @var Component
      */
     public $component;
-
-    /**
-     * 数据库
-     * @var DataBase
-     */
-    public $database;
 
     /**
      * 配置信息
@@ -98,7 +91,7 @@ class Console extends BaseObject
     public function configure()
     {
         // 挂载应用配置
-        Newx::app($this, $this->_config);
+        Newx::setApp($this, $this->_config);
 
         // 获取命令选项
         $this->option = ArrayHelper::value($this->_argv, 1);
