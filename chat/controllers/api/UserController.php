@@ -75,4 +75,23 @@ class UserController extends Controller
             $this->getResponse()->error($e->getMessage());
         }
     }
+
+    /**
+     * 获取用户token
+     */
+    public function actionToken()
+    {
+        $data = [];
+        $token = Session::get();
+        $user = Redis::create()->hGet(Cache::REDIS_KEY_USER_INFO, $token);
+        $user = json_decode($user, true);
+        if ($user) {
+            $data['token'] = $token;
+            $data['nickname'] = ArrayHelper::value($user, 'nickname');
+            $this->getResponse()->success(null, $data);
+        } else {
+            $this->getResponse()->error();
+        }
+
+    }
 }
